@@ -49,6 +49,7 @@ specifiers:
   ts-node: ^10.0.0
   tsconfig-paths: ^3.10.1
   typescript: ^4.3.5
+  uuid: ^8.3.2
 
 dependencies:
   '@nestjs/apollo': 10.0.0_42253c468f9e4fecaeaa1f271b9921c1
@@ -75,6 +76,7 @@ dependencies:
   reflect-metadata: 0.1.13
   rimraf: 3.0.2
   rxjs: 7.5.4
+  uuid: 8.3.2
 
 devDependencies:
   '@nestjs/cli': 8.2.0_eslint@8.8.0
