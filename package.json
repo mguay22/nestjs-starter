@@ -27,7 +27,7 @@
     "@nestjs/core": "^8.0.0",
     "@nestjs/graphql": "^10.0.0",
     "@nestjs/jwt": "^8.0.0",
-    "@nestjs/mongoose": "^9.0.2",
+    "@nestjs/mongoose": "9.2.0",
     "@nestjs/passport": "^8.2.1",
     "@nestjs/platform-express": "^8.0.0",
     "apollo-server-express": "^3.6.3",
@@ -36,15 +36,18 @@
     "class-validator": "^0.13.2",
     "cookie-parser": "^1.4.6",
     "graphql": "^16.3.0",
+    "graphql-tag": "^2.12.6",
     "joi": "^17.6.0",
     "link-preview-js": "^2.1.13",
-    "mongoose": "^6.2.1",
+    "mongodb": "4.9.1",
+    "mongoose": "6.5.5",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
+    "supertest-graphql": "^1.1.4",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -80,6 +83,8 @@
       "ts"
     ],
     "rootDir": "src",
+    "globalSetup": "./test/setup.ts",
+    "globalTeardown": "./test/teardown.ts",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
