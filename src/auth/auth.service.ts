@@ -15,7 +15,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async login(user: User, response: Response) {
+  async login(user: User, response?: Response) {
     const tokenPayload: TokenPayload = {
       userId: user._id,
     };
@@ -27,10 +27,14 @@ export class AuthService {
 
     const token = this.jwtService.sign(tokenPayload);
 
-    response.cookie('Authentication', token, {
-      httpOnly: true,
-      expires,
-    });
+    if (response) {
+      response.cookie('Authentication', token, {
+        httpOnly: true,
+        expires,
+      });
+    }
+
+    return token;
   }
 
   logout(response: Response) {

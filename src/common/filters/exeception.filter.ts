@@ -12,6 +12,12 @@ export class ExceptionFilter implements NestExceptionFilter {
   private readonly logger = new Logger(ExceptionFilter.name);
 
   catch(exception: any, host: ArgumentsHost) {
+    if (host.getType() === 'http') {
+      return this.catchHttp(exception, host);
+    }
+  }
+
+  private catchHttp(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
