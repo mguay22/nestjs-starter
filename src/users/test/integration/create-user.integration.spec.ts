@@ -2,9 +2,8 @@ import gql from 'graphql-tag';
 import request from 'supertest-graphql';
 import { getGqlErrorStatus } from '../../../test/gqlStatus';
 import { IntegrationTestManager } from '../../../test/IntegrationTestManager';
-import { CreateUserInput } from '../../dto/input/create-user-input.dto';
 import { User } from '../../models/user.model';
-import { userStub, testUser } from '../stubs/user.stub';
+import { testUser, userStub } from '../stubs/user.stub';
 
 describe('createUser', () => {
   const integrationTestManager = new IntegrationTestManager();
@@ -35,13 +34,16 @@ describe('createUser', () => {
             `,
           )
           .variables({
-            createUserData: { email: userStub.email, password: 'example' },
+            createUserData: {
+              email: userStub.email,
+              password: 'example',
+            },
           })
           .expectNoErrors();
         createdUser = response.data.createUser;
       });
 
-      test('then the response should be the newly created user', async () => {
+      test('then the response should be the newly created user', () => {
         expect(createdUser).toMatchObject({
           email: userStub.email,
         });
@@ -50,10 +52,7 @@ describe('createUser', () => {
       test('then the new user should be created', async () => {
         const user = await integrationTestManager
           .getCollection('users')
-          .findOne({
-            email: userStub.email,
-          });
-
+          .findOne({ email: userStub.email });
         expect(user).toBeDefined();
       });
     });
@@ -64,10 +63,6 @@ describe('createUser', () => {
       let resStatus: number;
 
       beforeAll(async () => {
-        const createUserData: CreateUserInput = {
-          email: testUser.email,
-          password: testUser.password,
-        };
         const { response } = await request<{ createUser: User }>(
           integrationTestManager.httpServer,
         )
@@ -81,12 +76,12 @@ describe('createUser', () => {
             `,
           )
           .variables({
-            createUserData,
+            createUserData: testUser,
           });
         resStatus = getGqlErrorStatus(response);
       });
 
-      test('then the response should be a 422', async () => {
+      test('then the response should be a 422', () => {
         expect(resStatus).toBe('422');
       });
     });
