@@ -38,7 +38,7 @@ export class IntegrationTestManager {
   }
 
   async afterAll() {
-    this.app.close();
+    await this.app.close();
   }
 
   getCollection(collectionName: string) {
