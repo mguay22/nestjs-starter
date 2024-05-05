@@ -15,24 +15,11 @@ export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async createUser(createUserData: CreateUserInput) {
-    await this.validateCreateUserData(createUserData);
     const userDocument = await this.usersRepository.create({
       ...createUserData,
       password: await bcrypt.hash(createUserData.password, 10),
     });
     return this.toModel(userDocument);
-  }
-
-  private async validateCreateUserData(createUserData: CreateUserInput) {
-    let user: UserDocument;
-    try {
-      user = await this.usersRepository.findOne({
-        email: createUserData.email,
-      });
-    } catch (err) {}
-    if (user) {
-      throw new UnprocessableEntityException('Email already exists.');
-    }
   }
 
   async getUser(getUserArgs: GetUserArgs) {

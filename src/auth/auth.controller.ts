@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import { Controller, Post, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { User } from '../users/models/user.model';
 import { AuthService } from './auth.service';
@@ -17,19 +17,11 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     await this.authService.login(user, response);
-    response.send(user);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get()
-  isAuthenticated() {
-    return true;
   }
 
   @Post('logout')
   @UseGuards(JwtAuthGuard)
   logout(@Res({ passthrough: true }) response: Response) {
     this.authService.logout(response);
-    response.json({});
   }
 }

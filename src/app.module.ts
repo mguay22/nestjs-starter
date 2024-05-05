@@ -1,15 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
-
+import { LoggerModule } from 'nestjs-pino';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { ExceptionFilter } from './common/filters/exeception.filter';
-import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
 @Module({
   imports: [
@@ -18,9 +15,30 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
       validationSchema: Joi.object({
         PORT: Joi.number().required(),
         MONGODB_URI: Joi.string().required(),
-        JWT_EXPIRATION: Joi.number().required(),
+        JWT_EXPIRATION: Joi.string().required(),
         JWT_SECRET: Joi.string().required(),
       }),
+    }),
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => {
+        const isProduction = configService.get('NODE_ENV') === 'production';
+
+        return {
+          pinoHttp: {
+            transport: isProduction
+              ? undefined
+              : {
+                  target: 'pino-pretty',
+                  options: {
+                    singleLine: true,
+                  },
+                },
+            level: isProduction ? 'info' : 'debug',
+          },
+        };
+      },
+      inject: [ConfigService],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile: true,
@@ -29,16 +47,6 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
     DatabaseModule,
     AuthModule,
     UsersModule,
-  ],
-  providers: [
-    {
-      provide: APP_FILTER,
-      useClass: ExceptionFilter,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
-    },
   ],
 })
 export class AppModule {}
