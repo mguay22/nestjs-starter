@@ -1,10 +1,10 @@
 import { Controller, Post, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
-import { User } from '../users/models/user.model';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './current-user.decorator';
 import JwtAuthGuard from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { User } from '../users/models/user.model';
 
 @Controller('auth')
 export class AuthController {

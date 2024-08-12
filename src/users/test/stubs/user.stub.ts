@@ -1,10 +1,10 @@
 import { Types } from 'mongoose';
 import { CreateUserInput } from '../../dto/input/create-user-input.dto';
-import { User } from '../../models/user.model';
+import { IUser } from '../../interfaces/user.interface';
 
-export const userStub: User = {
-  _id: new Types.ObjectId().toHexString(),
+export const userStub: IUser = {
   email: 'user@example.com',
+  password: 'TestPassword',
 };
 
 export const testUser: CreateUserInput = {
